@@ -20,7 +20,7 @@ const words = [
         text: "Richtrek",
     },
     {
-        text: "MLM Plan",
+        text: "Composition Plan",
         className: "text-blue-500 dark:text-blue-500",
     },
 ]
