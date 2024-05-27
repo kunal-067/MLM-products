@@ -32,11 +32,7 @@ function Coupons() {
             </div>
             <div className='mt-3 mx-1 flex flex-wrap mb-`'>
             <CouponCard amount={1000} bound={true} />
-                <CouponCard amount={10000} />
-                <CouponCard amount={1000} />
-                <CouponCard amount={300} />
-                <CouponCard amount={1000} />
-                <CouponCard amount={300} />
+                <CouponCard amount={2500} />
             </div>
         </div>
     )

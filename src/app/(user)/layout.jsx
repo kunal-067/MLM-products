@@ -21,7 +21,7 @@ function Laybout({ children }) {
     <>
       <UserContextProvider>
         <NavBar />
-        <main>
+        <main className='bg-slate-100'>
           <FetchUser />
           {children}
         </main>

@@ -38,6 +38,7 @@ export async function GET(req) {
             }
         ]);
 
+        // const products = await Product.find({});
         return NextResponse.json({
             message: 'Products fetched successfully !',
             products

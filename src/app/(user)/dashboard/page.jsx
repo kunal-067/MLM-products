@@ -4,13 +4,31 @@ import Card from '@/components/main/Card'
 import IncomeOverViewCard from '@/components/main/IncomeOverViewCard'
 import OverViewCard from '@/components/main/OverViewCard'
 import RecentReferralCard from '@/components/main/RecentReferralCard'
-import { useContext, useEffect } from 'react'
+import { toast } from '@/components/ui/use-toast'
+import axios from 'axios'
+import { useContext, useEffect, useState } from 'react'
 
 function Dashboard() {
   const {user, referrals, directRefs} = useContext(UserContext);
+  const [using,setUsing] = useState(false);
   
   if(!user){
     return <>Loading...</>
+  }
+  async function useCoin(){
+    setUsing(true)
+    try {
+      const {data} = await axios.post('/api/coins/use');
+      toast({
+        title:data.message
+      })
+      setUsing(true);
+    } catch (error) {
+      toast({
+        title:error.response.message || error.message
+      });
+      setUsing(true);
+    }
   }
   return (
     <div className='mx-6'>
@@ -19,10 +37,11 @@ function Dashboard() {
       </div>
 
       <div>
-        <section className='mt-3 flex flex-wrap'>
+        <section className='mt-3 flex flex-wrap sm:gap-2'>
           <Card title={'Earnings'} value={user?.earnings || 0} />
           <Card title={'Total Team'} value={referrals?.length || 0} />
           <Card title={'Referrals'} value={directRefs?.length || 0} />
+          <Card title={'Royal Coins'} value={user?.royalCoin || 0}/>
         </section>
 
         <section className='flex flex-wrap w-full'>

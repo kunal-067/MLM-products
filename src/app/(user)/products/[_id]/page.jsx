@@ -17,6 +17,7 @@ import axios from "axios";
 import { Minus, Plus } from "lucide-react";
 import Loader from "@/components/common/Loader";
 import { UserContext } from "@/app/context/Context";
+import PayNow from "@/components/main/PayNow";
 
 function Page({ params, searchParams }) {
   const { user } = useContext(UserContext);
@@ -51,19 +52,22 @@ function Page({ params, searchParams }) {
         })
       }
 
-      if (product) {
-        setPayNow({
-          shopId: product.shops[0].shop || product.addedBy,
-          productType: params.categroy,
-          productId: product._id,
-          quantity: quantity,
-          amount: product.shops[0]?.price || product.price,
-          size,
-          discount50: coupon === "balance50",
-          discount10: coupon === "balance2",
-          balance: coupon === "earning",
-        });
-      }
+      toast({
+        title:"Feature comming soon ..."
+      })
+      // if (product) {
+      //   setPayNow({
+      //     shopId: product.shops[0].shop || product.addedBy,
+      //     productType: params.categroy,
+      //     productId: product._id,
+      //     quantity: quantity,
+      //     amount: product.shops[0]?.price || product.price,
+      //     size,
+      //     discount50: coupon === "balance50",
+      //     discount10: coupon === "balance2",
+      //     balance: coupon === "earning",
+      //   });
+      // }
     } catch (err) {
       console.log(err);
     }
@@ -109,7 +113,7 @@ function Page({ params, searchParams }) {
   return <>
   { product ? (
     <>
-      {/* {payNow && <PayNow payNow={payNow} setPayNow={setPayNow} />} */}
+      <PayNow/>
       <div className=" bg-gray-200 shadow-md mb-4 pb-10">
 
         <div className="flex bg-white flex-wrap">
