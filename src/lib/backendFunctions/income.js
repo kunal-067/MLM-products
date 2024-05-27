@@ -49,7 +49,7 @@ export const couponClosing = async () => {
 
             const leftCv = user.leftCv;
             const rightCv = user.rightCv;
-            const cvCount = 0;
+            let cvCount = 0;
 
             //condition based cv checking : -------------
             if (leftCv > rightCv) {
