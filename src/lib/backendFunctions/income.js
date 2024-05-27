@@ -5,21 +5,21 @@ import {
     User
 } from "../models/user";
 
-export const destributeCv = async(sponsorId, cv, direct)=>{
-    try{
-    const sponsor = await User.findById(sponsorId);
-    if(!sponsor) return;
-    if(sponsor.lefftChild.equals(direct)){
-        sponsor.leftCv += cv;
-    }else if(sponsor.rightChild.equals(direct)){
-        sponsor.rightCv += cv;
+export const destributeCv = async (sponsorId, cv, direct) => {
+    try {
+        const sponsor = await User.findById(sponsorId);
+        if (!sponsor) return;
+        if (sponsor.lefftChild.equals(direct)) {
+            sponsor.leftCv += cv;
+        } else if (sponsor.rightChild.equals(direct)) {
+            sponsor.rightCv += cv;
+        }
+        if (sponsor.referredBy) {
+            await destributeCv(sponsor.referredBy, cv, sponsor._id);
+        }
+    } catch (err) {
+        throw new Error('error in destributingCv ' + err.message)
     }
-    if(sponsor.referredBy){
-        await destributeCv(sponsor.referredBy, cv, sponsor._id);
-    }
-}catch(err){
-    throw new Error('error in destributingCv '+err.message)
-}
 }
 export const couponClosing = async () => {
     try {
@@ -31,18 +31,65 @@ export const couponClosing = async () => {
                 user: user._id,
                 status: 'approved'
             });
-          
+
             const couponCount = userCoupons.reduce((acrr, curr) => {
                 return acrr + curr.quantity;
             }, 0);
 
-            let royality = 0.5 * couponCount * 2500;
+            let royality = 60 * couponCount;
 
             user.royalCoin += royality;
             if (royality >= 0) {
                 user.history.push({
                     msg: `You earned ₹${royality} as royality`,
                     hisType: 'royality',
+                    history: Date.now()
+                });
+            }
+
+            const leftCv = user.leftCv;
+            const rightCv = user.rightCv;
+            const cvCount = 0;
+
+            //condition based cv checking : -------------
+            if (leftCv > rightCv) {
+                if (rightCv > 700) {
+                    user.leftCv -= 700;
+                    user.rightCv = 0
+                    cvCount = 700
+                } else {
+                    user.leftCv -= rightCv;
+                    user.rightCv = 0;
+                    cvCount = rightCv;
+                }
+
+            } else if (rightCv == leftCv) {
+                user.leftCv = 0;
+                user.rightCv = 0
+                if (leftCv > 700) {
+                    cvCount = 700
+                } else {
+                    cvCount = leftCv
+                }
+
+            } else {
+                if (leftCv > 700) {
+                    user.leftCv = 0;
+                    user.rightCv -= 700;
+                    cvCount = 700
+                } else {
+                    user.leftCv = 0;
+                    user.rightCv -= leftCv;
+                    cvCount = leftCv
+                }
+            }
+
+            user.balance += cvCount*10;
+            user.earnings += cvCount*10;
+            if(cvCount > 0){
+                user.history.push({
+                    msg: `You earned ₹${cvCount * 10} as CV Matching Income`,
+                    hisType: 'cv-income',
                     history: Date.now()
                 });
             }
@@ -57,24 +104,29 @@ export const couponClosing = async () => {
 }
 
 export const refIncome = async (sponsorId, amount, quantity, userName) => {
-    try{
+    try {
         const sponsor = await User.findById(sponsorId);
-        if(!sponsor) throw 'invalid sponsor id ! sponsor not found.'
-        if(!sponsor.status != 'Active') return;
-        const refs = await User.find({referredBy:sponsor.referralCode, status:'Active'},{_id:1}).limit(6).lean();
-        if(refs.length >= 6 && !sponsor.royalUnlocked){
+        if (!sponsor) throw 'invalid sponsor id ! sponsor not found.'
+        if (!sponsor.status != 'Active') return;
+        const refs = await User.find({
+            referredBy: sponsor.referralCode,
+            status: 'Active'
+        }, {
+            _id: 1
+        }).limit(6).lean();
+        if (refs.length >= 6 && !sponsor.royalUnlocked) {
             sponsor.royalUnlocked = true;
         }
 
-        sponsor.balance += 500*quantity;
-        sponsor.earnings += 500*quantity;
+        sponsor.balance += 500 * quantity;
+        sponsor.earnings += 500 * quantity;
         sponsor.history.push({
-            msg:`You get referral income of ₹500 from ${userName}`,
-            hisType:'ref-income'
+            msg: `You get referral income of ₹500 from ${userName}`,
+            hisType: 'ref-income'
         })
 
         await sponsor.save();
-    }catch(error){
+    } catch (error) {
         console.error('Error in ref income' + error.message)
         throw new Error('Error in ref income' + error.message)
     }

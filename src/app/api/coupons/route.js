@@ -1,5 +1,6 @@
 import {
     couponClosing,
+    destributeCv,
     refIncome
 } from "@/lib/backendFunctions/income";
 import {
@@ -161,7 +162,9 @@ export async function PUT(req) {
         await coupon.save();
 
         if (coupUser.referredBy) {
+            const refUser = await User.findOne({referralCode:referredBy})
             refIncome(coupUser.referredBy, coupon.amount, coupon.quantity, coupUser.name);
+            await destributeCv(refUser._id, 10, coupUser._id)
         }
 
         return NextResponse.json({

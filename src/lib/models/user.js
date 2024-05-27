@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    rank:{
+        type:Number,
+        default:0
+    },
 
     referredBy: {
         type: String,
