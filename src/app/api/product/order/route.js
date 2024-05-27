@@ -4,7 +4,7 @@ import Product from "@/lib/models/products";
 import { User } from "@/lib/models/user";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { messageTypes } from "node-telegram-bot-api/src/telegram";
+// import { messageTypes } from "node-telegram-bot-api/src/telegram";
 
 export async function GET(req){
     const header = headers();
