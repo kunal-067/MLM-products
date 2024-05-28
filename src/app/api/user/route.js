@@ -74,11 +74,12 @@ export async function POST(req){
       
         if(referredBy){
             const sponsor = await User.findOne({referralCode:referredBy});
+            // console.log(sponsor)
             if(!sponsor){
                 return NextResponse.json({msg:'Sponsor not found! May be wrong referral code'}, {status:404})
             }
             sponsor.refCount += 1;
-            await Promise.all([sponsor.save() ,addTreeData(sponsor, position, user._id)])
+            await addTreeData(sponsor, position, user._id);
         }
 
         await user.save();
