@@ -27,16 +27,13 @@ export async function generateReferralCode() {
 
 export async function addTreeData(sponsor, position, userId) {
     try {
-        // console.log(sponsor)
-        if(!sponsor) return;
         if (position == 'left') {
             if (!sponsor.leftChild) {
                 sponsor.leftChild = userId;
                 return await sponsor.save();
             }
 
-            const nextChild = await User.findOne({referralCode:sponsor.referredBh})
-            console.log(nextChild)
+            const nextChild = await User.findById(sponsor.leftChild)
             return addTreeData(nextChild, position, userId)
         } else {
             if (!sponsor.rightChild) {
@@ -44,8 +41,7 @@ export async function addTreeData(sponsor, position, userId) {
                 return await sponsor.save();
             }
 
-            const nextChild = await User.findOne({referralCode:sponsor.referredBh})
-            // const nextChild = await User.findById(sponsor.rightChild)
+            const nextChild = await User.findById(sponsor.rightChild)
             return addTreeData(nextChild, position, userId)
         }
 
