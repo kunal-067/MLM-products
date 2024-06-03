@@ -102,7 +102,7 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
                 className="border rounded px-3 py-2 w-full mb-4"
                 type="number"
                 id="phone"
-                placeholder="Phone"
+                placeholder="pin-code"
                 value={shippingAddress?.pincode || ''}
                 onChange={(e) => setShippingAddress(prev =>({...prev, pincode:e.target.value}))}
                 required

@@ -39,6 +39,10 @@ const navLinks = [
         src: '/wallet'
     },
     {
+        name:"Products",
+        src:'/products'
+    },
+    {
         name: 'Profile',
         src: '/profile'
     }
@@ -55,7 +59,7 @@ function NavBar() {
             <div className='flex py-4 px-4 w-full justify-between'>
                 <SmNav />
                 <div className='flex'>
-                    <ShoppingBagIcon className='mr-5 cursor-pointer' />
+                    <ShoppingBagIcon onClick={()=>router.push('/products')} className='mr-5 cursor-pointer' />
                     <div onClick={() => router.push('/history')}>{history && (history.filter(his => his.status == 'unSeen').length > 0) ? <BellDot /> : <Bell />}</div>
                 </div>
             </div>

@@ -15,21 +15,7 @@ function Dashboard() {
   if(!user){
     return <>Loading...</>
   }
-  async function useCoin(){
-    setUsing(true)
-    try {
-      const {data} = await axios.post('/api/coins/use');
-      toast({
-        title:data.message
-      })
-      setUsing(true);
-    } catch (error) {
-      toast({
-        title:error.response.message || error.message
-      });
-      setUsing(true);
-    }
-  }
+
   return (
     <div className='mx-6'>
       <div className='text-xl font-bold py-[1rem] mx-1 bg-[#fff] -mt-10 pl-4 rounded-sm shadow-md'>

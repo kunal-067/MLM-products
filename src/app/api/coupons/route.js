@@ -35,7 +35,7 @@ export async function GET(req) {
         }
 
         let coupons;
-        if (iAdminFetch && user.role == 'admin') {
+        if (iAdminFetch && user.isAdmin) {
             coupons = await Coupon.find({
                 status: 'pending'
             });
