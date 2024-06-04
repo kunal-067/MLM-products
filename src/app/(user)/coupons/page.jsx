@@ -31,7 +31,6 @@ function Coupons() {
                 Coupons
             </div>
             <div className='mt-3 mx-1 flex flex-wrap mb-`'>
-            <CouponCard amount={1000} bound={true} />
                 <CouponCard amount={2500} />
             </div>
         </div>
@@ -44,13 +43,13 @@ function CouponCard({ amount, bound }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios.post('/api/coupons', { upi, amount, quantity, cType:bound ? 'Bounded' : 'General' }).then(res => {
+        axios.post('/api/coupons', { upi, amount, quantity, cType: bound ? 'Bounded' : 'General' }).then(res => {
             toast({
                 title: 'Request submitted successfully ! Now pay to proceed.'
             })
 
             setTimeout(() => {
-                window.location.href = `/payment?amount=${amount*quantity}`
+                window.location.href = `/payment?amount=${amount * quantity}`
             }, 100);
         }).catch(err => {
             console.log(err)
@@ -66,25 +65,10 @@ function CouponCard({ amount, bound }) {
                 <h2 className='font-bold'>Richtrek</h2>
             </div>
             <div className='w-full'>
-                <b>Coupon {bound&&(<span className='text-sm font-medium text-yellow-600 float-right'>Bounded</span>)}</b>
+                <b>Coupon</b>
                 <p>₹{amount}</p>
                 <div className='flex items-center justify-end w-full'>
-
-                    <Dialog>
-                        <DialogTrigger className='flex justify-center items-center text-white size-9 bg-purple-700 p-2 rounded-xl float-right mr-2'>
-                            <CircleHelp />
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Reedem coupon</DialogTitle>
-                                <DialogDescription>
-                                    Buy this coupon for activating your account, this can be used for doing various things...
-                                </DialogDescription>
-                            </DialogHeader>
-                        </DialogContent>
-                    </Dialog>
-
-
+                    
                     <AlertDialog>
                         <AlertDialogTrigger className='bg-green-700 rounded-sm flex justify-center items-center text-white px-3 py-[5px]'> Buy </AlertDialogTrigger>
                         <AlertDialogContent>
@@ -111,8 +95,6 @@ function CouponCard({ amount, bound }) {
                             </form>
                         </AlertDialogContent>
                     </AlertDialog>
-
-
 
                 </div>
             </div>

@@ -23,6 +23,7 @@ export async function GET(req){
             balance2:1,
             balance:1,
             earnings:1,
+            royalCoin:1,
             rightCv:1,
             leftCv:1,
             cvCycle:1,

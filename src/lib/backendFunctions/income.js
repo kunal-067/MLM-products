@@ -5,18 +5,28 @@ import {
     User
 } from "../models/user";
 
-export const destributeCv = async (sponsorId, cv, direct) => {
+export const destributeCv = async (userId, cv, direct) => {
     try {
-        const sponsor = await User.findById(sponsorId);
+        const sponsor = await User.findOne({
+            $or: [{
+                leftChild: userId
+            }, {
+                rightChild: userId
+            }]
+        });
+
         if (!sponsor) return;
-        if (sponsor.lefftChild.equals(direct)) {
+        console.log('kuklukxu 27',sponsor , direct, sponsor.leftChild?.equals(direct))
+        if (sponsor.leftChild?.equals(direct)) {
             sponsor.leftCv += cv;
-        } else if (sponsor.rightChild.equals(direct)) {
+        } else if (sponsor.rightChild?.equals(direct)) {
             sponsor.rightCv += cv;
         }
-        if (sponsor.referredBy) {
-            await destributeCv(sponsor.referredBy, cv, sponsor._id);
-        }
+
+        await sponsor.save();
+      
+        await destributeCv(sponsor._id, cv, sponsor._id);
+
     } catch (err) {
         throw new Error('error in destributingCv ' + err.message)
     }
@@ -84,9 +94,9 @@ export const couponClosing = async () => {
                 }
             }
 
-            user.balance += cvCount*10;
-            user.earnings += cvCount*10;
-            if(cvCount > 0){
+            user.balance += cvCount * 10;
+            user.earnings += cvCount * 10;
+            if (cvCount > 0) {
                 user.history.push({
                     msg: `You earned ₹${cvCount * 10} as CV Matching Income`,
                     hisType: 'cv-income',
@@ -103,11 +113,11 @@ export const couponClosing = async () => {
     }
 }
 
-export const refIncome = async (sponsorId, amount, quantity, userName) => {
+export const refIncome = async (sponsor, amount, quantity, userName) => {
     try {
-        const sponsor = await User.findById(sponsorId);
+        // const sponsor = await User.findById(sponsorId);
         if (!sponsor) throw 'invalid sponsor id ! sponsor not found.'
-        if (!sponsor.status != 'Active') return;
+        if (sponsor.status != 'Active') return;
         const refs = await User.find({
             referredBy: sponsor.referralCode,
             status: 'Active'
@@ -118,8 +128,8 @@ export const refIncome = async (sponsorId, amount, quantity, userName) => {
             sponsor.royalUnlocked = true;
         }
 
-        sponsor.balance += 500 * quantity;
-        sponsor.earnings += 500 * quantity;
+        sponsor.balance += (500 * quantity);
+        sponsor.earnings += (500 * quantity);
         sponsor.history.push({
             msg: `You get referral income of ₹500 from ${userName}`,
             hisType: 'ref-income'
