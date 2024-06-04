@@ -16,7 +16,6 @@ export const destributeCv = async (userId, cv, direct) => {
         });
 
         if (!sponsor) return;
-        console.log('kuklukxu 27',sponsor , direct, sponsor.leftChild?.equals(direct))
         if (sponsor.leftChild?.equals(direct)) {
             sponsor.leftCv += cv;
         } else if (sponsor.rightChild?.equals(direct)) {
