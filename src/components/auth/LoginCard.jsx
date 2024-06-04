@@ -42,7 +42,7 @@ function LoginCard() {
                 title:res.data.msg
             })
             setDisableSubmit(false);
-            localStorage.setItem('user', JSON.stringify({loogedIn:true}));
+            localStorage.setItem('userData', JSON.stringify({loogedIn:true}));
             window.location.href = '/dashboard';
         }).catch(err=>{
             console.error(err);
