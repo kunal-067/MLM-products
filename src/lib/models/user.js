@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
-    rouyalUnlocked:{
+    royalUnlocked:{
         type:Boolean,
         default:false
     }, 

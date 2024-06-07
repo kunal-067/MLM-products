@@ -15,6 +15,8 @@ export async function POST(req){
         }
 
         user.balance += user.royalCoin;
+        user.earnings += user.royalCoin;
+
         user.royalCoin = 0;
         await user.save();
         return NextResponse.json({message:"You have successfully converted your royal coin"})
