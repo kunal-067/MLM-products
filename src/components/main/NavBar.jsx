@@ -11,6 +11,7 @@ import {
 import { AlignJustify, Bell, BellDot, ShoppingBagIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/app/context/Context';
+import { Button } from '../ui/button';
 
 
 const navLinks = [
@@ -78,6 +79,12 @@ function SmNav() {
     function changeOpen(e) {
         setOpen(e)
     }
+
+    function logout(){
+        localStorage.removeItem("user");
+        localStorage.removeItem("userData");
+        window.location.href = "/login" 
+    }
     return (
         <Sheet open={open} onOpenChange={changeOpen}>
             <SheetTrigger><AlignJustify /></SheetTrigger>
@@ -96,7 +103,7 @@ function SmNav() {
                             <p className='float-left'>Complain</p>
                         </a>
 
-                        <li className='bg-red-400 text-white font-medium py-3 px-4 rounded-md mx-4 mt-6'>Logout</li>
+                        <Button className='bg-red-400 text-white font-medium py-3 px-4 rounded-md mx-4 mt-6' onClick={logout}>Logout</Button>
                     </SheetDescription>
                 </SheetHeader>
             </SheetContent>
