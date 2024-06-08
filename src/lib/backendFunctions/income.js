@@ -127,10 +127,16 @@ export const refIncome = async (sponsor, amount, quantity, userName) => {
             sponsor.royalUnlocked = true;
         }
 
-        sponsor.balance += (500 * quantity);
-        sponsor.earnings += (500 * quantity);
+        let incr;
+        if(amount == 2500){
+            incr = 500;
+        }else{
+            incr = 50;
+        }
+        sponsor.balance += (incr * quantity);
+        sponsor.earnings += (incr * quantity);
         sponsor.history.push({
-            msg: `You get referral income of ₹500 from ${userName}`,
+            msg: `You get referral income of ₹${incr} from ${userName}`,
             hisType: 'ref-income'
         })
 
