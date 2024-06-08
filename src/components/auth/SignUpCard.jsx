@@ -106,7 +106,7 @@ function SignUpCard({refC}) {
                                     <Label htmlFor="option-one" className='text-gray-500'>Left</Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <RadioGroupItem onClick={() => setPosition('right')} id="option-two" />
+                                    <RadioGroupItem onClick={() => setPosition('right')} id="option-two" disabled/>
                                     <Label htmlFor="option-two" className='text-gray-500'>Right</Label>
                                 </div>
                             </RadioGroup>

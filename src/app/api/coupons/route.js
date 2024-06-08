@@ -164,7 +164,7 @@ export async function PUT(req) {
         if (coupUser.referredBy) {
             const refUser = await User.findOne({referralCode: coupUser.referredBy})
             await refIncome(refUser, coupon.amount, coupon.quantity, coupUser.name);
-            await destributeCv(coupUser._id, 10, coupUser._id)
+            // await destributeCv(coupUser._id, 10, coupUser._id)
         }
 
         return NextResponse.json({
