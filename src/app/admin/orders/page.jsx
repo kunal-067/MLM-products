@@ -154,11 +154,11 @@ function DataTable({ orders }) {
                                     <DropdownMenuContent>
                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem >Street : {order.shippingAddress.street}</DropdownMenuItem>
-                                        <DropdownMenuItem >City :  {order.shippingAddress.city}</DropdownMenuItem>
-                                        <DropdownMenuItem >Pincode :  {order.shippingAddress.pincode}</DropdownMenuItem>
-                                        <p>State :  {order.shippingAddress.state}</p>
-                                        <p>Address :  {order.shippingAddress.address}</p>
+                                        <DropdownMenuItem >Street : {order.shippingAddress?.street}</DropdownMenuItem>
+                                        <DropdownMenuItem >City :  {order.shippingAddress?.city}</DropdownMenuItem>
+                                        <DropdownMenuItem >Pincode :  {order.shippingAddress?.pincode}</DropdownMenuItem>
+                                        <p>State :  {order.shippingAddress?.state}</p>
+                                        <p>Address :  {order.shippingAddress?.address}</p>
                                     </DropdownMenuContent>
                                 </DropdownMenu></TableCell>
                                 <TableCell>{order.upi}</TableCell>
