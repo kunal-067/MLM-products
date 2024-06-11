@@ -10,6 +10,7 @@ const navLinks = [
     { href: '/admin/products', name: 'Products' },
     { href: '/admin/coupons', name: 'Coupons' },
     { href: '/admin/withdrawls', name: 'Withdrawls' },
+    { href: '/admin/orders', name: 'Orders' },
     // { href: '/admin/settings', name: 'Settings' }
 ]
 export default function RootLayout({ children }) {

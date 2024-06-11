@@ -10,6 +10,7 @@ const orderSchema = new Schema({
         ref: "User",
         required: true
     },
+    phone:Number,
     product: {
         type: Schema.Types.ObjectId,
         ref: "Product",
@@ -22,9 +23,11 @@ const orderSchema = new Schema({
     shippingAddress: {
         address: String,
         nearPoint: String,
+        street:String,
         city: String,
         state: String,
-        countary: String
+        countary: String,
+        pincode:String
     },
     shippingCharge: {
         type: Number,

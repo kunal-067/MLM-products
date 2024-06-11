@@ -20,7 +20,7 @@ export async function GET(req) {
     try {
         const orders = await Order.find({
             user: userId
-        });
+        }).populate("product", "images name");
         return NextResponse.json({
             message: 'Orders fetched successfully',
             orders
@@ -40,6 +40,7 @@ export async function POST(req) {
     const header = headers();
     const userId = header.get('userId');
     const payload = await req.json();
+    console.log(payload)
     const {
         productId,
         quantity,
@@ -47,10 +48,14 @@ export async function POST(req) {
         shippingAddress,
         getCvDiscount,
         paymentMode,
+        phone,
         upi
-    } = payload
+    } = payload;
+
+    console.log('hello');
     try {
-        const [product, user] = Promise.all([Product.findById(productId), User.findById(userId)]);
+        const [product, user] = await Promise.all([ Product.findById(productId), User.findById(userId) ]);
+        console.log("logging", product, user)
         if (!product || !user) {
             return NextResponse.json({
                 message: "Something went wrong while fetching ! try again",
@@ -59,6 +64,8 @@ export async function POST(req) {
                 status: 404
             })
         }
+
+        console.log(user)
         //cv increment
         user.cv += product.cv;
         if (user.referredBy) {
@@ -73,13 +80,15 @@ export async function POST(req) {
             discount += product.sp * product.cvDiscount / 100;
         };
         const newOrder = new Order({
-            product: searchParams._id,
+            product: productId,
+            phone: phone || user.phone,
             user: userId,
             quantity,
             size,
             shippingAddress,
             discount,
-            payableAmount: product.sp - discount
+            payableAmount: product.sp - discount,
+            upi
         })
         if (paymentMode == 'Online') {
             if (!upi) return NextResponse.json({
@@ -116,6 +125,8 @@ export async function PATCH(req) {
     const userId = header.get('userId');
     const payload = await req.json();
     const {
+        paymentStatus,
+        status,
         orderId
     } = payload;
     try {
@@ -128,7 +139,8 @@ export async function PATCH(req) {
                 status: 404
             });
         }
-        if (!order.equals(userId)) {
+        const user = await User.findById(order.user);
+        if (!order.equals(userId) && !user.isAdmin) {
             return NextResponse.json({
                 message: "Invalid attempt this order doesn't belongs from you",
                 error: 'invalid attempt'
@@ -136,6 +148,17 @@ export async function PATCH(req) {
                 status: 400
             })
         }
+
+        if(paymentStatus && paymentStatus == "Decline"){
+            order.deleteOne();
+        }else if(paymentStatus){
+            order.paymentStatus = paymentStatus 
+        }else if(status){
+            order.status = status
+        }
+
+        await order.save();
+        return NextResponse.json({message:"Status changed !"})
     } catch (error) {
         console.error(error);
         return NextResponse.json({

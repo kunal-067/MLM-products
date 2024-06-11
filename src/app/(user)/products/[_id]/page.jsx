@@ -27,11 +27,13 @@ function Page({ params, searchParams }) {
 
   const [coupon, setcoupon] = useState("none");
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState("NOT");
   const [count, setCount] = useState(0);
   const [product, setProduct] = useState(undefined);
   const [payNow, setPayNow] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const [getCvDiscount, setGetCvDiscount] = useState(false)
 
   const [coupDiscount, setCoupDiscount] = useState('');
   useEffect(() => {
@@ -51,23 +53,14 @@ function Page({ params, searchParams }) {
           title: "You haven't logged in yet please login firstly"
         })
       }
-
-      toast({
-        title:"Feature comming soon ..."
-      })
-      // if (product) {
-      //   setPayNow({
-      //     shopId: product.shops[0].shop || product.addedBy,
-      //     productType: params.categroy,
-      //     productId: product._id,
-      //     quantity: quantity,
-      //     amount: product.shops[0]?.price || product.price,
-      //     size,
-      //     discount50: coupon === "balance50",
-      //     discount10: coupon === "balance2",
-      //     balance: coupon === "earning",
-      //   });
-      // }
+      if (product) {
+        console.log("hello")
+        setPayNow({
+          productId: product._id,
+          quantity: quantity,
+          size,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -98,9 +91,16 @@ function Page({ params, searchParams }) {
     });
   }, [count, current, api]);
 
+  const handleCoup = (value)=>{
+    if(value == "balance2"){
+      setGetCvDiscount(true)
+    }else{
+      setGetCvDiscount(false);
+    }
+  }
 
   if (payNow) {
-    // return <PayNow payNow={payNow} setPayNow={setPayNow} />
+    return <PayNow payNow={payNow} setPayNow={setPayNow} getCvDiscount={getCvDiscount} />
   }
   if (loading) {
     return (
@@ -113,7 +113,6 @@ function Page({ params, searchParams }) {
   return <>
   { product ? (
     <>
-      <PayNow/>
       <div className=" bg-gray-200 shadow-md mb-4 pb-10">
 
         <div className="flex bg-white flex-wrap">
@@ -148,7 +147,8 @@ function Page({ params, searchParams }) {
               {product.images.map((img, i) => (
                 <CarouselItem key={i}>
                   <div className="size-full h-[60vh] flex justify-center items-center">
-                    <img src={img} alt="" className="h-full" />
+                    {console.log(img)}
+                    <img src={img} alt="jk" className="h-full" />
                   </div>
                 </CarouselItem>
               ))}
@@ -195,24 +195,18 @@ function Page({ params, searchParams }) {
                 <RadioGroup
                   defaultValue="none"
                   className="ml-3"
-                  // onValueChange={handleCoup}
+                  onValueChange={handleCoup}
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="balance2" />
                     <Label htmlFor="balance2" className="opacity-70">
-                      Use 2% Wallet(₹{user.balance2})
+                      Use discount Wallet(₹{user.balance2})
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2 text-2xl">
-                    <RadioGroupItem value="balance50" />
-                    <Label htmlFor="balance50" className="opacity-70">
-                      Use 50% Wallet(₹{user.balance50})
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
                     <RadioGroupItem value="balance" />
-                    <Label htmlFor="earning" className="opacity-70">
-                      Use Earnings(₹{user.balance})
+                    <Label htmlFor="balance50" className="opacity-70">
+                      Use Balance(₹{user.balance50})
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">

@@ -8,7 +8,6 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
   const { toast } = useToast();
   const router = useRouter()
   const [shippingAddress, setShippingAddress] = useState({});
-  const [location, setLocation] = useState("");
   const [paymentMode, setPaymentMode] = useState("");
   const [phone, setPhone] = useState("");
 
@@ -18,37 +17,35 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
 
   const placeOrder = async (e) => {
     e.preventDefault()
-    const token = JSON.parse(localStorage.getItem('token'))
-    // try {
-    //   const { data } = await axios.post(BUY_PRODUCT, {
-    //     productType: payNow.productType,
-    //     productId: payNow.productId,
-    //     shopId: payNow.shopId,
-    //     quantity: payNow.quantity,
-    //     size: payNow.size,
-    //     discount50: payNow.discount50,
-    //     discount10: payNow.discount10,
-    //     balance: payNow.balance,
-    //     shippingAddress,
-    //     location,
-    //     paymentMode,
-    //     phone,
-    //     upi
-    //   }, {
-    //     withCredentials: true, headers: { 'authorization': token }
-    //   });
-    //   if (data.msg === "order placed successfully") {
-    //     if(paymentMode == 'online'){
-    //         return router.push('/pay-amount')
-    //     }
-    //     toast({
-    //       title: data.msg,
-    //     });
-    //     router.push(`/orderdetails/${data.id}`)
-    //   }
-    // } catch (err) {
-    //   console.log("Something went wrong", err);
-    // }
+    // const token = JSON.parse(localStorage.getItem('token'))
+    try {
+      const { data } = await axios.post('/api/product/order', {
+        productId: payNow.productId,
+        quantity: payNow.quantity,
+        size: payNow.size,
+        balance: payNow.balance,
+        getCvDiscount:payNow.getCvDiscount,
+        shippingAddress,
+        phone,
+        upi
+      }, {
+        withCredentials: true
+      });
+      if (data.message == "Successfully created order !") {
+        if(paymentMode == 'Online'){
+            return router.push(`/payment?amount=${data.order.payableAmount}`)
+        }
+        toast({
+          title: data.message,
+        });
+        router.push(`/orders`)
+      }
+    } catch (err) {
+      toast({
+        title:err.response?.data.message || err.message
+      })
+      console.log("Something went wrong", err);
+    }
   };
 
   useEffect(() => {
@@ -62,8 +59,8 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
     // <div className="fixed">
     // inset-0
 
-    <div className="inset-0 p-4 w-[100vw] min-h-[100vh] flex justify-center items-center bg-gray-900 bg-opacity-70 backdrop-filter backdrop-blur-lg overflow-y-auto">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-[95%] md:w-[50%] lg:min-w-[50%]">
+    <div className="absolute z-50 inset-0 p-4 w-[100vw] min-h-[100vh] flex justify-center items-center bg-gray-900 bg-opacity-70 backdrop-filter backdrop-blur-lg overflow-y-auto">
+      <div className="bg-white h-fit mt-32 p-8 rounded-lg shadow-lg w-[95%] md:w-[50%] lg:min-w-[50%]">
         <h2 className="text-2xl font-bold mb-4">Checkout</h2>
         <form preventDefault>
           {!openPage ? (
@@ -133,7 +130,7 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
                   <input
                     type="radio"
                     name="paymentMethod"
-                    value="cash-on-delivery"
+                    value="COD"
                     onChange={(e) => setPaymentMode(e.target.value)}
                   />
                   <span className="ml-2">Cash on Delivery</span>
@@ -142,7 +139,7 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
                   <input
                     type="radio"
                     name="paymentMethod"
-                    value="online"
+                    value="Online"
                     onChange={(e) => setPaymentMode(e.target.value)}
                   />
                   <span className="ml-2">UPI</span>
@@ -167,31 +164,31 @@ function PayNow({ payNow = {l:'k', p:'p'}, setPayNow }) {
                 {/* {errors.email && <p className='text-red-700 text-sm'>{errors.email}</p>} */}
               </div>
               <div className="mb-2">
-                <label
+                {/* <label
                   htmlFor="password"
                   className="block text-sm font-semibold text-gray-800"
                 >
                   Amount
-                </label>
-                <input
+                </label> */}
+                {/* <input
                   type="number"
                   className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   placeholder='Please enter amount'
                   value={payNow.amount}
                 // onChange={(e) => setAmount(e.target.value)}
-                />
+                /> */}
               </div>
             </>
           )
           }
           <button
-            onClick={() => setPayNow(false)}
+            onClick={() => openPage ? setUpiPage(false) : setPayNow(false)}
             type="button"
             className="bg-red-500 mr-5 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors duration-300"
           >
             Cancel
           </button>
-          {paymentMode != 'online' || openPage ?
+          {paymentMode != 'Online' || openPage ?
             <button
             type="button"
               onClick={placeOrder}
