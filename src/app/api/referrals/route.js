@@ -1,9 +1,9 @@
-import { getTreeNodes } from "@/lib/backendFunctions/referral";
 import { User } from "@/lib/models/user";
 import { connectDb } from "@/utils/api/dbconnect";
 import { headers } from "next/headers";
 // import { useSearchParams } from "next/navigation";
 import { NextResponse } from "next/server";
+import { getTreeNodes } from "@/lib/backendFunctions/referral";
 
 await connectDb();
 
