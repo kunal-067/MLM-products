@@ -19,17 +19,17 @@ export async function GET(req) {
     const userId = header.get('userId');
     const url = new URL(req.url);
     const query = new URLSearchParams(url.searchParams);
-    const allOrder = parseInt(query.get('allOrder'));
+    const allOrder = query.get('allOrder');
     try {
         const user = await User.findById(userId);
-        let orders ; 
-        if(user.isAdmin && allOrder){
+        let orders;
+        if (user.isAdmin && allOrder) {
             orders = await Order.find({}).populate("product", "images name");
-        }else{
-        orders = await Order.find({
-            user: userId
-        }).populate("product", "images name");
-    }
+        } else {
+            orders = await Order.find({
+                user: userId
+            }).populate("product", "images name");
+        }
 
         return NextResponse.json({
             message: 'Orders fetched successfully',
@@ -64,7 +64,7 @@ export async function POST(req) {
 
     console.log('hello');
     try {
-        const [product, user] = await Promise.all([ Product.findById(productId), User.findById(userId) ]);
+        const [product, user] = await Promise.all([Product.findById(productId), User.findById(userId)]);
         console.log("logging", product, user)
         if (!product || !user) {
             return NextResponse.json({
@@ -82,7 +82,7 @@ export async function POST(req) {
             const sponsor = await User.findOne({
                 referralCode: user.referredBy
             });
-         destributeCv(sponsor, product.cv, userId)
+            destributeCv(sponsor, product.cv, userId)
         }
 
         let discount = 0;
@@ -159,16 +159,18 @@ export async function PATCH(req) {
             })
         }
 
-        if(paymentStatus && paymentStatus == "Decline"){
+        if (paymentStatus && paymentStatus == "Decline") {
             order.deleteOne();
-        }else if(paymentStatus){
-            order.paymentStatus = paymentStatus 
-        }else if(status){
+        } else if (paymentStatus) {
+            order.paymentStatus = paymentStatus
+        } else if (status) {
             order.status = status
         }
 
         await order.save();
-        return NextResponse.json({message:"Status changed !"})
+        return NextResponse.json({
+            message: "Status changed !"
+        })
     } catch (error) {
         console.error(error);
         return NextResponse.json({
