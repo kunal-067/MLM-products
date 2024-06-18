@@ -33,7 +33,7 @@ function OrderPage() {
     const [orders, setOrders] = useState([{ _id: "3rej5", product: { name: "hello js", image: "vercel.png" }, payableAmount: 1500, quantity: 5, upi: '890008@upi', paymentMode: "online", phone: 987001, paymentStatus: "Pending" }]);
     const router = useRouter();
     useEffect(() => {
-        axios.get('/api/product/order?size=30').then(res => {
+        axios.get(`/api/product/order?allOrder=${true}`).then(res => {
             setOrders(res.data.orders)
         }).catch(err => {
             console.log(err);

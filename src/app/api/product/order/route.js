@@ -17,10 +17,20 @@ import {
 export async function GET(req) {
     const header = headers();
     const userId = header.get('userId');
+    const url = new URL(req.url);
+    const query = new URLSearchParams(url.searchParams);
+    const allOrder = parseInt(query.get('allOrder'));
     try {
-        const orders = await Order.find({
+        const user = await User.findById(userId);
+        let orders ; 
+        if(user.isAdmin && allOrder){
+            orders = await Order.find({}).populate("product", "images name");
+        }else{
+        orders = await Order.find({
             user: userId
         }).populate("product", "images name");
+    }
+
         return NextResponse.json({
             message: 'Orders fetched successfully',
             orders
