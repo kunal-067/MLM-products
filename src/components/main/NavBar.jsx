@@ -46,6 +46,10 @@ const navLinks = [
     {
         name: 'Profile',
         src: '/profile'
+    },
+    {
+        name:'Investments',
+        src:'/investment'
     }
 ]
 
