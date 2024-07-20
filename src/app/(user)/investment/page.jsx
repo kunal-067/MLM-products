@@ -12,6 +12,7 @@ const Investment = () => {
     const [upi, setUpi] = useState('');
     const [msg, setDescription] = useState('');
     const [investments, setInvestments] = useState([]);
+    const [tInv, setTinv] = useState(0);
 
     useEffect(() => {
         axios.get('/api/investment').then(res => {
@@ -21,6 +22,14 @@ const Investment = () => {
         })
     }, [])
 
+    useEffect(()=>{
+        if(!investments&&investments.length<=0) return
+        const totalAmount = investments.reduce((acr,curr)=>{
+            return acr + curr.amount
+        }, 0)
+
+        setTinv(totalAmount);
+    },[investments])
     async function invest() {
         try {
             const res = await axios.post('/api/investment', {upi, msg, amount:2000});
@@ -30,7 +39,7 @@ const Investment = () => {
             })
 
             setTimeout(() => {
-                window.location.href = `/payment?amount=${1500}`
+                window.location.href = `/payment?amount=${2000}`
             }, 100);
 
         } catch (error) {
@@ -48,7 +57,7 @@ const Investment = () => {
 
             <div>
                 <div className='flex flex-col py-4 pt-6 gap-2'>
-                    <h4 className=' text-lg font-medium'>Total investment : <span>₹ 4000</span></h4>
+                    <h4 className=' text-lg font-medium'>Total investment : <span>₹ {tInv}</span></h4>
 
 
                     {/* <Button className='w-fit px-12' onClick={invest}>Invest</Button> */}
