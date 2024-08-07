@@ -17,22 +17,45 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
 import { toast } from '@/components/ui/use-toast';
-// imp
+import { Button } from '@/components/ui/button';
+
 
 function Invest() {
-    const [investments, setInvestments] = useState('');
+    const [investments, setInvestments] = useState([]);
+    const [amount, setAmount] = useState('');
 
     useEffect(() => {
         axios.get("/api/investment?status=Pending&withUser=True").then(res => {
             console.log(res)
-            setInvestments(res.data.investments)
+            setInvestments(res.data?.investments || [])
         }).catch(err => {
             console.log(err)
         })
     }, [])
+
+    async function distribute(){
+        try {
+            const {data} = await axios.put('/api/investment', {incr:amount})
+            toast({
+                title:data.msg
+            })
+        } catch (error) {
+            console.log(error);
+            toast({
+                title:error.response?.data.msg || error.message
+            })
+        }
+    }
     return (
         <>
-            <div>Invest</div>
+            <div className='flex justify-between py-4 px-6'>
+                <h2 className='font-semibold text-[21px]'>Investments</h2>
+
+                <div className='flex gap-2'>
+                    <Input type='number' className=' w-64' name='InvAmount' placeholder='Enter distributing amount' value={amount} onChange={e=>setAmount(e.target.value)} />
+                    <Button onClick={distribute}>Distribute</Button>
+                </div>
+            </div>
             <div>
                 <DataTable investments={investments}/>
             </div>
@@ -69,7 +92,7 @@ function DataTable({ investments }) {
 
             {/* ================= Table body data ============== */}
             {
-                investments.length > 0 ? (
+                investments?.length > 0 ? (
                     <TableBody>
 
                         {

@@ -1,38 +1,42 @@
 'use client'
+import { UserContext } from '@/app/context/Context';
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
 import { formattedDateTime } from '@/utils/time';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 const Investment = () => {
     const [upi, setUpi] = useState('');
     const [msg, setDescription] = useState('');
     const [investments, setInvestments] = useState([]);
     const [tInv, setTinv] = useState(0);
+    const { user } = useContext(UserContext);
+    const [amount, setAmount] = useState(2000);
 
     useEffect(() => {
         axios.get('/api/investment').then(res => {
-            setInvestments(res.data.investments)
+            setInvestments(res.data?.investments || [])
         }).catch(err => {
             console.log(err)
         })
     }, [])
 
-    useEffect(()=>{
-        if(!investments&&investments.length<=0) return
-        const totalAmount = investments.reduce((acr,curr)=>{
+    useEffect(() => {
+        if (!investments && investments.length <= 0) return
+        const totalAmount = investments.reduce((acr, curr) => {
             return acr + curr.amount
         }, 0)
 
         setTinv(totalAmount);
-    },[investments])
+    }, [investments])
     async function invest() {
         try {
-            const res = await axios.post('/api/investment', {upi, msg, amount:2000});
+            const res = await axios.post('/api/investment', { upi, msg, amount });
             console.log(res)
             toast({
                 title: res.data?.msg
@@ -56,13 +60,13 @@ const Investment = () => {
             </div>
 
             <div>
-                <div className='flex flex-col py-4 pt-6 gap-2'>
+                <div className='flex flex-col py-4 pt-6'>
                     <h4 className=' text-lg font-medium'>Total investment : <span>₹ {tInv}</span></h4>
-
+                    <h4 className=' text-[16px] -mt-1 font-semibold text-green-600'>Total Earning : <span>₹ {user?.invIncome || 0}</span></h4>
 
                     {/* <Button className='w-fit px-12' onClick={invest}>Invest</Button> */}
                     <Dialog>
-                        <DialogTrigger className='w-fit font-medium px-12 bg-black py-1 text-white rounded-md' >
+                        <DialogTrigger className='w-fit font-medium mt-4 px-12 bg-black py-1 text-white rounded-md' >
                             Invest
                         </DialogTrigger>
                         <DialogContent>
@@ -70,6 +74,17 @@ const Investment = () => {
                                 Investment Form :
                             </DialogTitle>
                             <DialogDescription>
+                                <Label>Amount :</Label>
+                                <Select onValueChange={v=>setAmount(v)}>
+                                    <SelectTrigger className='mb-2 mt-1'>
+                                        <SelectValue placeholder={amount} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value={1000}>1000</SelectItem>
+                                        <SelectItem value={2000}>2000</SelectItem>
+                                    </SelectContent>
+                                </Select>
+
                                 <Label>UPI :</Label>
                                 <Input placeholder='Enter UPI Id' className='mb-2 mt-1' value={upi} onChange={e => setUpi(e.target.value)} />
 
@@ -96,7 +111,7 @@ const Investment = () => {
                 <h3 className='text-center text-lg font-bold mt-4 mb-2'>Your Investments</h3>
                 <div className="flex flex-wrap justify-center gap-4">
                     {
-                        investments.length > 0 && investments.map(investment => (
+                        investments?.length > 0 && investments.map(investment => (
                             <InvestmentCard key={investment._id} amount={investment.amount} date={investment.createdAt} />
                         ))
                     }

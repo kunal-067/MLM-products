@@ -119,7 +119,16 @@ const userSchema = new mongoose.Schema({
             type: Date,
             default: Date.now()
         }
-    }]
+    }],
+
+    isInvestor:{
+        type:Boolean,
+        default:false
+    },
+    invIncome:{
+        type:Number,
+        default:0
+    }
 })
 
 export const User = mongoose.models?.User || mongoose.model('User', userSchema)
