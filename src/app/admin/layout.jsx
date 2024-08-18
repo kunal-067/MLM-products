@@ -11,7 +11,8 @@ const navLinks = [
     { href: '/admin/coupons', name: 'Coupons' },
     { href: '/admin/withdrawls', name: 'Withdrawls' },
     { href: '/admin/orders', name: 'Orders' },
-    { href: '/admin/investments', name: 'Investments' }
+    { href: '/admin/investments', name: 'Investments' },
+    {href:'/admin/training', name:'Trainings'}
 ]
 export default function RootLayout({ children }) {
     const path = usePathname()

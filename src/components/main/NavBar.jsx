@@ -50,6 +50,10 @@ const navLinks = [
     {
         name:'Investments',
         src:'/investment'
+    },
+    {
+        name:'Training',
+        src:'/training'
     }
 ]
 
