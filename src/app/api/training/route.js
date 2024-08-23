@@ -158,7 +158,7 @@ export async function PUT(req) {
                 referralCode: user.referredBy
             })
             sponsor.balance += incRef;
-            sponsor.earning += incRef;
+            sponsor.earnings += incRef;
 
             await sponsor.save();
         }
