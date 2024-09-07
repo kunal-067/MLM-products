@@ -109,7 +109,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
     try {
-        const incRef = 800
+        const incRef = 500
 
         const header = headers();
         const userId = header.get('userId');
