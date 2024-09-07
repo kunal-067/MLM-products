@@ -70,7 +70,7 @@ const Training = () => {
                     )
                 }
 
-                <TrainingCard amount={2019} status={'lo'}/>
+                <TrainingCard amount={2010} status={'lo'}/>
             </section>
         </div>
     )

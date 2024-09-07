@@ -80,7 +80,7 @@ const Investment = () => {
                                         <SelectValue placeholder={amount} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value={210}>210</SelectItem>
+                                        {/* <SelectItem value={210}>210</SelectItem> */}
                                         <SelectItem value={1000}>1000</SelectItem>
                                         <SelectItem value={2000}>2000</SelectItem>
                                     </SelectContent>
