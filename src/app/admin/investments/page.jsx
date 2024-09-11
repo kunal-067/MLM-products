@@ -13,7 +13,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
 import { toast } from '@/components/ui/use-toast';
@@ -54,6 +54,8 @@ function Invest() {
                 <div className='flex gap-2'>
                     <Input type='number' className=' w-64' name='InvAmount' placeholder='Enter distributing amount' value={amount} onChange={e=>setAmount(e.target.value)} />
                     <Button onClick={distribute}>Distribute</Button>
+                    {/* <Button variant='destructive' onClick={sendToOne}>Send to one</Button> */}
+                    <PersonalIncome/>
                 </div>
             </div>
             <div>
@@ -203,6 +205,48 @@ function DataTable({ investments }) {
             }
         </Table>
     )
+}
+
+function PersonalIncome() {
+    const [phone, setPhone] = useState('');
+    const [amount, setAmount] = useState('');
+    function sendToOne(){
+        axios.post('/api/investment/send', {incr:amount, phone}).then(res=>{
+            toast({
+                title: res.data?.msg
+            })
+        }).catch(err=>{
+            console.error(err)
+            toast({
+                title:err.response.data.msg || err.message
+            })
+        })
+    }
+  return (
+    <Dialog>
+    <DialogTrigger className='w-fit font-medium mt-4 px-12 bg-black py-1 text-white rounded-md' >
+        Personal Sending
+    </DialogTrigger>
+    <DialogContent>
+        <DialogTitle>
+            Income Form :
+        </DialogTitle>
+        <DialogDescription>
+
+            <Label>Phone :</Label>
+            <Input placeholder="Enter users's phone no." className='mb-2 mt-1' value={phone} onChange={e => setPhone(e.target.value)} />
+
+            <Label>Amount :</Label>
+            <Input placeholder='Enter Amount to send' className='mb-2 mt-1' value={amount} onChange={e => setAmount(e.target.value)} />
+
+        </DialogDescription>
+        <DialogFooter className='flex justify-between'>
+            <DialogClose className='p-1 px-6 rounded-md border-2'>Close</DialogClose>
+            <DialogClose className='p-1 px-6 rounded-md bg-black text-white' onClick={sendToOne}>Send</DialogClose>
+        </DialogFooter>
+    </DialogContent>
+</Dialog>
+  )
 }
 
 export default Invest
