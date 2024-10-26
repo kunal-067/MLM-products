@@ -52,7 +52,8 @@ function Invest() {
                 <h2 className='font-semibold text-[21px]'>Investments</h2>
 
                 <div className='flex gap-2'>
-                    <Input type='number' className=' w-64' name='InvAmount' placeholder='Enter distributing amount' value={amount} onChange={e=>setAmount(e.target.value)} />
+                    <Button>Withdrawls</Button>
+                    <Input type='number' className=' w-64 ml-4' name='InvAmount' placeholder='Enter distributing amount' value={amount} onChange={e=>setAmount(e.target.value)} />
                     <Button onClick={distribute}>Distribute</Button>
                     {/* <Button variant='destructive' onClick={sendToOne}>Send to one</Button> */}
                     <PersonalIncome/>
